@@ -1,0 +1,65 @@
+#! /usr/bin/python3
+
+import os, shutil
+
+# clear screen
+os.system('clear')
+
+# path validation
+while True:
+    path = input('Please provide a path:\n')
+    os.system('clear')
+                                 # clear screen
+    if os.path.exists(path):
+        print('Path is valid. Proceeding...')
+        os.chdir(path)
+        print(os.getcwd())
+        break
+    else:
+        print('Not a valid path!!!! Try again\n')
+
+bigSize = 0
+# size input validation
+while True:
+    try:
+        bigSize = int(input('Delete all files of what size? Enter size:\n'))
+        break
+    except ValueError:
+        os.system('clear')
+        print('File size needs to be a Integer!!!! Please try again\n')
+# walk through directory tree
+for root, dirs, files in os.walk(os.getcwd()):
+    for name in files:
+        os.system('clear')
+        filePath = os.path.join(root, name)
+
+        # check if size threshold met
+        if os.path.getsize(filePath) >= bigSize:
+            print('\"%s\" is a big one. It is %d MB yabove the your given threshold Do you want to delete? \'y\' for yes \'n\' for no: ' % (os.path.basename(filePath), os.path.getsize(filePath) - bigSize))
+            choice = input()
+
+            # choice valdiation
+            while True:
+                if (choice.lower() == 'y') or (choice.lower() == 'n'):
+                    break
+                else:
+                    os.system('clear')
+                    choice = input('That is not a valid option. Choose between \'y\' for yes \'n\' for no:\n')
+
+            # Delete file or folder respectively
+            if choice.lower() == 'y':
+                os.system('clear')
+                print('Deleting %s .......' % (os.path.basename(filePath)))
+                if os.path.isdir(filePath):
+                    print('Deleted a folder. Press \"Enter\" to continue:')
+                    # uncommentthe following line after successfully tested
+                    #shutil.rmtree(filePath)
+                elif os.path.isfile(filePath):
+                    print('Deleted a file')
+                    # uncomment the following line after successfully tested
+                    # os.remove(filePath)
+                    print('Deleted a folder. Press \"Enter\" to continue:')
+                    input()
+            else:
+                os.system('clear')
+                continue
